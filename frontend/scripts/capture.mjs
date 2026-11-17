@@ -1,0 +1,16 @@
+import { chromium } from '@playwright/test';
+import path from 'node:path';
+import {mkdir} from 'node:fs/promises';
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1440,height:1000},deviceScaleFactor:1});
+await page.goto('http://127.0.0.1:8765');
+await page.waitForLoadState('networkidle');
+await page.getByLabel('选择待校正图片').setInputFiles(path.resolve('../evaluation/generated/grid_barrel.png'));
+await page.getByText('已校正',{exact:true}).waitFor({timeout:45000});
+await page.waitForLoadState('networkidle');
+await mkdir('../docs/screenshots',{recursive:true});
+await page.screenshot({path:'../docs/screenshots/workspace.png',fullPage:true});
+await page.setViewportSize({width:390,height:844});
+await page.screenshot({path:'../docs/screenshots/mobile.png',fullPage:false});
+console.log('Saved real corrected-image workspace screenshots');
+await browser.close();

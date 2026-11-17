@@ -1,0 +1,831 @@
+% An iterative optimization algorithm for lens distortion correction using tow-parameter models
+
+# ABOUT
+
+* Author    : Daniel Santana-Cedrés <dsantana@ctim.es>
+              Luis Gómez            <lgomez@ctim.es>
+              Miguel Alemán-Flores  <maleman@ctim.es>
+              Agustín Salgado       <asalgado@ctim.es>
+              Julio Esclarín        <jesclarin@ctim.es>
+              Luis Mazorra          <lmazorra@ctim.es>
+              Luis Álvarez          <lalvarez@ctim.es>
+* Copyright : (C) 2009-2013 IPOL Image Processing On Line http://www.ipol.im/
+* License   : CC Creative Commons "Attribution-NonCommercial-ShareAlike" 
+              see http://creativecommons.org/licenses/by-nc-sa/3.0/es/deed.en
+							
+# CHANGE LOG
+********************************************************************************
+Description of the fields of the change log:
+--------------------------------------------------------------------------------
+FIELD     DESCRIPTION
+--------------------------------------------------------------------------------
+DATE:     The date when the changes have been done
+AUTHOR:   The author of the changes made
+CHANGES:  This field has four subfields that are:
+          Files:  List of the files affected by the changes
+          Issue:  Brief description of the found issue
+          System: System in which the issue has been found
+          Solution: Adopted solution for the found issue
+          (When more than one issue has been found on a same date, in the change log appear more blocks of these subfields)
+--------------------------------------------------------------------------------
+********************************************************************************
+
+
+================================================================================
+DATE:     08/04/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_utilities/utilities.h
+          Issue:    Unused macros
+          System:   All
+          Solution: We remove the unused macros for allocating and deallocating 3D space in memory
+================================================================================
+
+================================================================================
+DATE:     21/04/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_utilities/utilities.h
+                    ami_utilities/utilities.cpp
+          Issue:    New function added
+          System:   All
+          Solution: We add a new function for checking the invertibility of a lens distortion model, according to theorems shown on SIIMS paper
+          ----
+          Files:    lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    true and false values for center optimization
+          System:   All
+          Solution: We have changed the values for the center optimization from true/false to True/False, because they caused a problem with the online demo
+================================================================================
+
+================================================================================
+DATE:     25/04/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_image/image.h
+          Issue:    Warning on asignation
+          System:   All
+          Solution: We remove a warning on assignation, in which we had "==" instead "="
+          ---
+          Files:    ami_lens_distortion/lens_distortion_model.cpp (read function)
+          Issue:    Returned values are ignored (-Werror flag)
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We take into account the returned values from fscanf, and we use it for error checking
+================================================================================
+
+================================================================================
+
+DATE:     03/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_image/io_png/io_png.c
+                    ami_pol/ami_pol.c
+          Issue:    Compiling/linking errors with C and C++
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We move both files into .cpp files
+          ----
+          File:     ami_image_draw/image_draw.h
+          Issue:    Uninitialized variable "cercle_color" is considered as an error due to -Werror compilation flag
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We initialize the variable to zero
+
+================================================================================
+
+================================================================================
+
+DATE:     04/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_filters/filters.h
+                    ami_image/image.h
+                    ami_lens_distortion/lens_distortion_procedures.h
+                    ami_primitives/line_extraction.cpp
+          Issue:    Compile error (-Werror) when the -fopen flag is dissabled 
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We have checked all the #pragma statements and we have added preprocessor directives for taking into account the definition of the _OPENMP macro 
+
+================================================================================
+
+================================================================================
+
+DATE:     05/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_utilities/utilities.h
+                    ami_image/io_png/io_png.cpp
+          Issue:    Returned values are ignored (-Werror flag)
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We take into account the returned values from fscanf, and we use it for error checking
+          ----
+          File:     ami_image_draw/image_draw.h
+          Issue:    Uninitialized variable circle_color
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We initialize the variable to zero
+          ----
+          Files:    ami_pol/ami_pol.h
+          Issue:    Deprecated inclusion of malloc.h
+          System:   OSX
+          Solution: We change the inclusion of malloc.h by cstdlib
+          ----
+          Files:    ami_lens_distortion/lens_distortion_model.cpp
+          Issue:    Stdio functions not being declared
+          System:   Ubuntu Linux 14.04 LTS with GCC version 4.8.2
+          Solution: We have included the header file cstdio
+          ----
+          Files:    ami_lens_distortion/lens_distortion_model.h
+                    ami_primitives/subpixel_image_contours.h
+          Issue:    Improving the documentation
+          System:   All
+          Solution: We have improved the documentation of the methods of the classes lens_distortion_model and subpixel_image_contours
+          ----
+          Files:    ami_lens_distortion/lens_distortion_procedures.cpp
+                    ami_primitives/line_points.cpp
+          Issue:    Undeclared 'sqrtl' function
+          System:   Windows 7 with CYGWIN 6.1 and GCC version 4.8.2
+          Solution: Since C99 the 'sqrt' function works with long double input parameters, so we change the 'sqrtl' calls for 'sqrt'
+================================================================================
+
+================================================================================
+
+DATE:     06/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_utilities/utilities.h
+                    ami_utilities/utilities.cpp
+                    lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Checking the invertibility of the lens distortion model 
+          System:   All
+          Solution: We have added a new function to check the invertibility of the lens distortion model.
+
+================================================================================
+
+================================================================================
+
+DATE:     11/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Checking the invertibility of the lens distortion model 
+          System:   All
+          Solution: We have added the checking of the invertibility of the lens distortion model inside the iterative process and the error minimization
+
+================================================================================
+
+================================================================================
+
+DATE:     12/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_lens_distortion/lens_distortion_procedures.cpp
+          Issue:    Iterations test 
+          System:   All
+          Solution: We have added a check for controlling that the minimization process doesn't enter on an infinite loop
+
+================================================================================
+
+================================================================================
+
+DATE:     27/06/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_utilities/utilities.cpp
+          Issue:    Print function syntax 
+          System:   All
+          Solution: We have changed the example line with new values for the parameters (path of the example image and angle_point_orientation_max_difference)
+
+================================================================================
+
+================================================================================
+
+DATE:     18/07/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_lens_distortion/lens_distortion_procedures.cpp
+          Issue:    Checking the invertibility of the lens distortion model inside the minimization process
+          System:   All
+          Solution: We have added the checking of the invertibility as part of the condition of the update in the process of the energy minimization
+
+================================================================================
+
+================================================================================
+
+DATE:     20/10/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_image/io_png/io_png.cpp
+          Issue:    strcmp function not found
+          System:   MacOSX 10.6.8 wiht GCC version 4.2.1
+          Solution: We include the appropriate header file
+          ----
+          File:     README.txt
+          Issue:    Improve the existent documentation
+          System:   All
+          Solution: We include new documentation related to problems with png library on MacOSX and we describe the systems where we have checked the code
+          ----
+          File:     README.txt
+          Issue:    Flags -Werror and -fopenmp
+          System:   All
+          Solution: We have modified the compilation line in order to remove the -Werror flag. Also, we include an alternative compilation line using the OpenMP library
+          ----
+          File:     makefile
+          Issue:    The flags -Werror and -fopenmp have been removed
+          System:   All
+          Solution: We have removed the -Werror flag and -fopenmp flag appears as an alternative option inside a commented line in the makefile
+
+================================================================================
+
+================================================================================
+
+DATE:     27/11/2014
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    makefile
+          Issue:    Compile options for using OpenMP library
+          System:   All
+          Solution: We have added a compile option for using or not the OpenMP library, by means of indicate the activation of the OMP variable (OMP=1) with the make command.
+
+================================================================================
+
+================================================================================
+
+DATE:     23/02/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_primitives/line_extraction.cpp
+          Issue:    Changes in the code
+          System:   All
+          Solution: We have improved the Hough function in order to use OpenMP parallelization
+
+================================================================================
+
+================================================================================
+
+DATE:     14/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_primitives/line_extraction.cpp
+          Issue:    Inclusion of the omp.h file
+          System:   All
+          Solution: We have added a preprocessor directive in order to avoid including the file if the _OPENMP macro is not defined
+
+================================================================================
+
+================================================================================
+
+DATE:     15/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Difference between the rescaling of the distortion-free image with polynomial model and with division model
+          System:   All
+          Solution: We have corrected the scale factor used
+          ----
+          Files:    All
+          Issue:    Indentation coherence and changing tabs by spaces
+          System:   All
+          Solution: We have reviewed all the files, changed tabs by spaces and kept 2 spaces for indentation
+
+================================================================================
+
+================================================================================
+
+DATE:     16/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    All
+          Issue:    Commented code
+          System:   All
+          Solution: We have erased the commented code
+
+================================================================================
+
+================================================================================
+
+DATE:     17/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_lens_distortion/lens_distortion.h
+                    ami_lens_distortion/lens_distortion.cpp
+                    ami_image/image.h
+          Issue:    Unused methods
+          System:   All
+          Solution: We have removed the unused methods
+
+================================================================================
+
+================================================================================
+
+DATE:     20/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_primitives/image_primitives.h
+                    ami_primitives/line.h
+                    ami_primitives/line_points.h
+                    ami_primitives/line_points.cpp
+                    ami_primitives/point2d.h
+                    ami_primitives/subpixel_image_contours.h
+                    ami_primitives/subpixel_image_contours.cpp
+                    ami_utilities/utilities.h
+          Issue:    Unused methods
+          System:   All
+          Solution: We have removed the unused methods
+
+================================================================================
+
+================================================================================
+
+DATE:     21/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_primitives/line_extraction.cpp
+          Issue:    Memory use
+          System:   All
+          Solution: We have improved the use of memory
+          ----
+          Files:    ami_utilities/utilites.h
+          Issue:    Unused macros
+          System:   All
+          Solution: We have removed the unused macros
+
+================================================================================
+
+================================================================================
+
+DATE:     27/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_filters/filters.h
+          Issue:    Use of ami_median_float function
+          System:   All
+          Solution: We have substituted ami_median_float by std::nth_element
+
+================================================================================
+
+================================================================================
+
+DATE:     29/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_utilities/utilities.h
+                    ami_utilities/utilites.cpp
+          Issue:    Grouping input parameters
+          System:   All
+          Solution: We have added in utilites.h a new struct for grouping the input parameters. Moreover, in utilites.cpp, we have included a new parameter to the function check_params_lens_distortion_correction_2p_iterative_optimization, in order to fill the input parameters structure
+          ----
+          Files:    lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Structure of the input parameters
+          System:   All
+          Solution: We have modified the main function in order to use the new structure of the input parameters
+
+================================================================================
+
+================================================================================
+
+DATE:     30/04/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_primitives/subpixel_image_contours.h
+                    ami_primitives/subpixel_image_contours.cpp
+                    ami_primitives/line_extraction.cpp
+                    ami_filters/filters.h
+          Issue:    seno/coseno variables and methods
+          System:   All
+          Solution: We have substituted all the occurrences of seno/coseno by sine/cosine
+          ----
+          Files:    ami_lens_distortion/lens_distortion_model.h
+                    ami_lens_distortion/lens_distortion_model.cpp
+                    ami_lens_distortion/lens_distortion_procedures.h
+                    ami_lens_distortion/lens_distortion_procedures.cpp
+          Issue:    evaluation_quotient method implementation
+          System:   All
+          Solution: We have removed evaluation_quotient method implementation and its use, due to that evaluation method works with DIVISION model too
+          ----
+          Files:    ami_lens_distortion/lens_distortion_model.cpp
+          Issue:    evaluation method implementation
+          System:   All
+          Solution: We have modified the implementation of the method according to the reviewer's suggestion
+          ----
+          Files:    ami_utilities/utilites.cpp
+          Issue:    Error in the invertibility test
+          System:   All
+          Solution: We have corrected the error in the invertibility test for the division model
+          ----
+          Files:    ami_lens_distortion/lens_distortion_procedures.h
+          Issue:    variable names
+          System:   All
+          Solution: We have translated the names into English
+          ----
+          Files:    ami_lens_distortion/lens_distortion_procedures.h
+          Issue:    Common parts in method undistort_image_inverse_fast
+          System:   All
+          Solution: We have factorized the common parts
+
+================================================================================
+
+================================================================================
+
+DATE:     04/05/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_lens_distortion/lens_distortion_procedures.h
+                    ami_lens_distortion/lens_distortion_procedures.cpp
+          Issue:    Similar methods and common parts
+          System:   All
+          Solution: We have combined the methods distortion_points_to_line_equation with distortion_points_to_line_equation_quotient, and model_center_estimation_2p_polynomial with model_center_estimation_2p_quotient.
+                    We have written a new two procedures for computing the gradient and hessian
+                    We have created a new structure for saving the values of the partial derivatives
+                    We have created a new procedure for computing the accumulators for computing the partial derivatives
+                    We have extracted the common parts in distortion_points_to_line_equation
+
+================================================================================
+
+================================================================================
+
+DATE:     05/05/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_lens_distortion/lens_distortion_procedures.cpp
+          Issue:    Common parts
+          System:   All
+          Solution: We have written a procedure for computing the denominators for updating k1 and k2 parameters of the lens distortion model
+          ----
+          Files:    ami_primitives/line_extraction.cpp
+          Issue:    The Hough method was too large
+          System:   All
+          Solution: We have divided the method in several functions: update_subpixel_contours, voting, maximum_selection, capturing_points, debugging_primitives, remove_and_join, and recompute_line_equations  
+
+================================================================================
+
+================================================================================
+
+DATE:     06/05/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    ami_filters/filters.h
+          Issue:    Initial marking of the imap structure
+          System:   All
+          Solution: We have modified this part and now we write only on the positions belonging to the limits of the image
+
+================================================================================
+
+================================================================================
+
+DATE:     07/05/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    All
+          Issue:    Restructuring the files in different folders
+          System:   All
+          Solution: We have reorganized the code in two types: auxiliary and main
+          ----
+          Files:    All
+          Issue:    Files inclusion
+          Solution: We have resolved some problems related to the inclusion of the files after restructuring them
+
+================================================================================
+
+================================================================================
+
+DATE:     08/05/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    auxiliary/ami_filters.h
+          Issue:    Move to main directory
+          System:   All
+          Solution: We have moved ami_filters.h to the main directory, because it includes the Canny method. Also, we have renamed it as filters.h
+          ----
+          Files:    main/filters.h
+                    main/lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Files inclusion
+          Solution: We have resolved some problems with files inclusion, related to the previous issue
+          ----
+          Files:    README.txt
+          Issue:    Alternative compilation lines
+          Solution: We have changed the alternative compilation lines according to the new structure in different folders. Also, we have described this structure
+
+================================================================================
+
+================================================================================
+
+DATE:     11/05/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Drawing the lines detected by improved Hough
+          System:   All
+          Solution: We have modified the image in which the detected lines are drawn. Instead of using the gray level image, we draw the lines in the edge image.
+
+================================================================================
+
+================================================================================
+
+DATE:     02/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/subpixel_image_contours.h
+                    main/subpixel_image_contours.cpp
+          Issue:    Renaming class
+          System:   All
+          Solution: We have renamed the class subpixel_image_contours to image_contours, as well as the filenames.
+          ----
+          Files:    main/image_contours.h
+          Issue:    set_with and set_height unused methods
+          System:   All
+          Solution: We have removed both methods.
+          ----
+          Files:    main/line_extraction.h
+                    main/line_extraction.cpp
+          Issue:    nlineas
+          System:   All
+          Solution: We have changed all the occurrences of nlineas by nlines
+          ----
+          Files:    main/line_extraction.cpp
+          Issue:    Limits initialization for searching the maximum
+          System:   All
+          Solution: We have rewritten the initialization according to the suggestion of the IPOL reviewer.
+
+================================================================================
+
+================================================================================
+
+DATE:     03/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Repeated block of code
+          System:   All
+          Solution: We have modified the lines devoted to correct the orientation inside the function update_subpixel_contours by a call to orientation_update.
+          ----
+          Files:    main/line_extraction.cpp
+          Issue:    Instances of vector<float> corrected_orientation
+          System:   All
+          Solution: We have modified all the instances of corrected_orientation using vector<float> by using point2d<float>. We have also modified the type of the value returned by the function orientation_update to point2d.
+
+================================================================================
+
+================================================================================
+
+DATE:     04/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Function orientation_update
+          System:   All
+          Solution: We have factorized the code of the function
+          ----
+          Files:    main/line_extraction.cpp
+          Issue:    Function voting
+          System:   All
+          Solution: We have factorized the code of the voting process
+
+================================================================================
+
+================================================================================
+
+DATE:     09/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Function debugging_primitives
+          System:   All
+          Solution: We have wrote a new procedure for erasing the points (erase_point)
+
+================================================================================
+
+================================================================================
+
+DATE:     10/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_distortion_procedures.h
+          Issue:    Functions undistort_polynomial_image_inverse and undistort_quotient_image_inverse
+          System:   All
+          Solution: We have combined both functions into a single one, called undistort_image_inverse
+
+================================================================================
+
+================================================================================
+
+DATE:     11/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Function maximum_selection
+          System:   All
+          Solution: We have rewritten the code of the function to make it more readable and clear. We have added several procedures during the process: update_distance, region_marking and update_marking_radius.
+          ----
+          Files:    main/lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Image correction
+          System:   All
+          Solution: We have unified the calls for correcting the image, because now it is not necessary to distinguish between both types of lens distortion model.
+
+================================================================================
+
+================================================================================
+
+DATE:     14/09/2015
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Function debugging_primitives
+          System:   All
+          Solution: We have written the computation of the orientation sign in a new function.
+
+================================================================================
+
+================================================================================
+
+DATE:     15/01/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    makefile
+          Issue:    Including std=c++98 option
+          System:   All
+          Solution: We have included this new flag.
+          ----
+          Files:    README.txt
+          Issue:    Spelling error ("Darwing")
+          System:   all
+          Solution: We have corrected it.
+          ----
+          Files:    main/lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have modified the function energy_minimization, according to reviewer's suggestion.
+                    In function iterative_optimization, we have removed some unused variables and deleted redundant ones.
+                    We have created some new procedures for filling the edges image and for writing the output data.
+
+================================================================================
+
+================================================================================
+
+DATE:     18/01/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/image_contours.h
+                    main/image_contours.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have removed the inclusion of ami_image.h.
+                    We have removed the attribute N, which is never used.
+                    We have changed the type returned by get_index from const vector<int> to cons vector<int>&.
+                    We have removed all set_ unused methods, except set_index.
+                    We have removed the copy constructor and its implementation.
+                    We have implemented an assignment operator.
+          ----
+          Files:    main/line_extraction.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have removed the inclusion of omp.h
+                    We have modified the comments in capital characters.
+                    We have rewritten the introduction of each function.
+                    We have taken out from update_contours the updating of the center and the distance to the furthest corner.
+                    We have included the use of the new assignment operator of image_contours class.
+                    We use a new index variable 'j' instead of writing [index[i]]
+                    We have removed some unused or redundant parameters from several functions.
+                    We have declared some static constants at the top of the file for avoiding include them as parameters.
+                    We have corrected the doxygen documentation.
+                    We have replaced the name of the function debugging_primitives by ensure_consistent_line_orientations.
+                    We have simplified the code of ensure_consistent_line_orientations.
+          ----
+          Files:    auxiliary/ami_lens_distortion_model.h
+          Issue:    Method for checking the identity
+          System:   All
+          Solution: We have included a new method called is_identity
+
+================================================================================
+
+================================================================================
+
+DATE:     19/01/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: In line_equation_distortion_extraction_improved_hough, we have modified the doxygen documentation of the main function, moving the description of the parameters to the header.
+                    In the same function, we have modified the checking of angle and distance resolution using assert.
+                    We have removed some unused or redundant variables.
+                    We have included const modifier to vector<int> for the parameters which are not modified in the functions.
+                    In line_equation_distortion_extraction_improved_hough, we have moved to the inside of the parallel loop the private variables.
+                    We have updated the doxygen documentation.
+          ----
+          Files:    main/lens_distortion_procedures.h
+                    main/lens_distortion_procedures.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have moved the structure E_accumulators to the cpp file.
+                    We have corrected a mistake in one of the variables of E_accumulators.
+                    In model_center_estimation_2p, we have updated the doxygen documentation and we have removed the distortion center as parameter.
+                    In build_lr1_quotient_vector, we have reordered the arguments.
+                    In undistort_image_inverse, the parameter d changes to const.
+                    We have included a new enumeration variable called ImageAmplification, for the scale factor in undistort_image_inverse.
+                    We have modified the code of fitting the image scale in undistort_image_inverse using a switch.
+                    We have included in main/lens_distortion_correction_2p_iterative_optimization.cpp a new static const variable for the image amplification factor.
+                    In undistort_image_inverse, we have modified the code for computing the maximum distance to the corner, using the function update_rsqmax.
+                    In undistort_image_inverse, we have included two new functions: compute_division_l1r for computing the inversion using Newton-Raphson in the case of the dision model, and compute_scale for computing the amplification scale.
+                    
+
+================================================================================
+
+================================================================================
+
+DATE:     20/01/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/lens_distortion_procedures.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: In distortion_points_to_line_equation we have included the modifier const for the lens distortion argument.
+                    We have updated the doxygen documentation of distortion_points_to_line_equation.
+                    In distortion_points_to_line_equation we have replaced printf by cout.
+                    We have modified the documentation of distortion_points_to_line_equation in order to poit out that we return the distance and not the average.
+                    We have created a new class for E_accumulators and adding some methods associated to the old structure. Also we have included somo get/set methods.
+                    We have implemented a new procedure for updating the lens ditortion model and incrementing the accumlators, called update_ldm_and_increment_accumulator. It is used by the method compute_accumulators of class E_accumulators.
+                    We have removed the debugging variables and some comments.
+                    We have changed h1, h2 and TOL as constants.
+                    We have modified the way we return the value of the error from model_center_estimation_2p, by using std::min
+                    
+================================================================================
+
+================================================================================
+
+DATE:     21/01/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/lens_distortion_procedures.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have reorganized the code of the class E_accumulators, in order to avoid placing prototype definitions at the top of the file.
+                    We have updated the doxygen documentation of the class E_accumulators.
+                    
+================================================================================
+
+================================================================================
+
+DATE:     25/04/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/image_contours.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have corrected some misspelling errors in the comments.
+                    We hace changed the evaluation of the edges, changing 'c[m]==0' by '!c[m]'.
+                    
+================================================================================
+
+================================================================================
+
+DATE:     27/04/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/image_contours.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have modified the if in line 144, including both conditions which previously separated in two conditional structures.
+          ----
+          Files:    main/lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Some changes
+          Sytem:    All
+          Solution: We have changed the type of ldm in line 52 to in,out in the doxygen documentation.
+                    We have passed the image_primitives object in line 60 as const.
+                    We have initialized the variable tf_ldm in the energy_minimization procedure.
+                    At the end of iterative_optimization we use best_num_points instead of calling to count_points for returning the average error.
+                    We have changed 'vector<int> index = contours.get_index();' by 'const vector<int> &index = contours.get_index();' in fill_edges3c.
+                    In write_output_file we have passed the objects with const modifier.
+                    In write_output_file we have deleted the argv parameter and we use the i_params structure for printing the selected option for the center optimization.
+          ----
+          Files:    main/line_extraction.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: We have modified the initialization of the modified contours object using true directly (line 99).
+                    We have changed the computation of x3,y3 using directly the result of the evaluation method. We have removed the parameters p and max_norm.
+                    We have passed to the voting procedure the angle increment for the angle interval as a single parameter.
+                    In the update_distance procedure, we have included the modifier const for the variable score_k.
+                    In line_equation_distortion_extraction_improved_hough we have changed the use of xc,yc by an objecto of type point2d<double>.
+                    In compute_orientation_sign we have included a parameter of type line_points instead of passing the image_primitives object and the line index.
+                    We have removed the variable nlines_plus from the line_equation_distortion_extraction_improved_hough procedure.
+                    In line_equation_distortion_extraction_improved_hough we have modified 'vector<int> index' by 'const vector<int> &index'.
+                    In remove_and_join we have changed 'if(!(sign1>0&&sign2>0) && !(sign1<0&&sign2<0))' by 'if(sign1*sign2<=0)'.
+                    We have simplified the updating of dmi when we update the contours object.
+                    We have modified the update of best_distortion_parameter.
+                    
+================================================================================
+
+================================================================================
+
+DATE:     28/04/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/line_extraction.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: In remove_and_join we have used local references for making more readable the code.
+                    We have modified the test of the average distance.
+                    We have included a critical region when we update the set of primitives and the distortion parameter in line_equation_distortion_extraction_improved_hough.
+          ----
+          Files:    main/lens_distortion_procedures.h
+          Issue:    Some changes
+          System:   All
+          Solution: We have replaced the variable ldm_centre by ldm_center in undistort_image_inverse.
+                    
+================================================================================
+
+================================================================================
+
+DATE:     29/04/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/lens_distortion_procedures.h
+          Issue:    Some changes
+          System:   All
+          Solution: We have modified the function compute_scale in order to return the double value of the scale factor.
+          ----
+          Files:    main/lens_distortion_procedures.cpp
+          Issue:    Some changes
+          System:   All
+          Solution: Whe have removed the unused method set_E_p1_p2_xc_yc.
+                    In distortion_points_to_line_equation, we have modified the computation of r[0][1] and r[2][0], simplifiying the if/else (lines 170 and 171).
+                    In line 761 we have corrected a mistake in the asignment of k0 in the temp lens distortion model.
+                    Line 843, when we allocate the memory, we have change Na+2 by Na+1.
+                    In line 850 we have modified the upper bound of the loop by using l1r.size().
+                    In model_center_estimation_2p have moved the code for computing prevk1 and prevk2 closer to the computation of nextk1 and nextk2.
+                    In model_center_estimation_2p we have renamed dc0 and dc1 by prevdc and nextdc.
+                    
+================================================================================
+
+================================================================================
+
+DATE:     03/05/2016
+AUTHOR:   Daniel Santana-Cedrés
+CHANGES:  Files:    main/filters.h
+          Issue:    Test in fill_imap
+          System:   All
+          Solution: We have modified the test 'imap[nk]==3' by 'imap[nk]>=2' in the line 258 of the fill_imap procedure.
+                    
+================================================================================
+
+================================================================================
+
+DATE:     10/05/2022
+AUTHOR:   Pascal Monasse
+CHANGES:  Files:    main/lens_distortion_correction_2p_iterative_optimization.cpp
+          Issue:    Crash when opt_center=false
+          System:   All
+          Solution: in function energy_minimization, tt_ldm was uninitialized when opt_center=false, causing a crash in check_invertibility.
+                    
+================================================================================

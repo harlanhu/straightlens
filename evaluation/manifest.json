@@ -1,0 +1,7 @@
+{
+  "source": "Local deterministic synthetic geometry plus the bundled upstream building sample",
+  "tuning": ["building", "grid_barrel", "grid_pincushion", "grid_identity", "curves", "blank"],
+  "smoke_validation": ["grid_offcenter", "overlay_identity"],
+  "limits": "Small engineering validation set; not a representative accuracy benchmark. Curve folds are not independent of native whole-image line discovery.",
+  "generate_command": ".venv-local/bin/python scripts/evaluate.py --phase policy"
+}

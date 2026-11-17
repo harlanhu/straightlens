@@ -1,0 +1,9 @@
+StraightLens application code and modifications are provided under Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0).
+
+License text: https://creativecommons.org/licenses/by-nc-sa/3.0/legalcode
+
+You must give appropriate credit, provide a link to the license, indicate changes, use the work only for non-commercial purposes, and distribute adaptations under the same license.
+
+The vendored IPOL algorithm retains the original authors' copyright and license notices in third_party/ipol. See the original source headers and UPSTREAM.md for attribution and local changes.
+
+Third-party libraries retain their respective licenses. User-supplied example images are not relicensed by this notice.
