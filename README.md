@@ -52,6 +52,54 @@ bash scripts/run_local.sh
 
 可通过 `PORT=8766 bash scripts/run_local.sh` 更换端口。`STRAIGHTLENS_PYTHON` 指定其他 Python 环境；`STRAIGHTLENS_DATA` 指定任务目录（默认项目内 `.runtime/jobs`）。旧版本的 `LENSLINE_PYTHON` 和 `LENSLINE_DATA` 仍可作为兼容变量使用。无需运行另一个 Vite 服务；FastAPI 会托管构建后的前端。
 
+### Docker
+
+Docker 会在镜像构建阶段编译 IPOL 原生程序、安装 Python 依赖并构建前端，运行时只启动一个 FastAPI 容器。需要 Docker Engine 24+ 和 Compose v2：
+
+```bash
+docker compose build
+docker compose up -d
+curl http://127.0.0.1:8765/api/health
+```
+
+打开 http://127.0.0.1:8765 。默认端口只绑定本机回环地址；需要更换端口时执行 `STRAIGHTLENS_PORT=8766 docker compose up -d`。
+
+Dockerfile 支持 `linux/amd64` 和 `linux/arm64`。在 Apple Silicon 上本地构建当前架构镜像；发布多架构镜像时使用 Buildx，并将结果推送到镜像仓库：
+
+```bash
+docker buildx build \
+  --platform linux/amd64,linux/arm64 \
+  --tag ghcr.io/harlanhu/straightlens:latest \
+  --push .
+```
+
+如果只需要在当前机器上验证 amd64 构建，可以执行：
+
+```bash
+docker buildx build --platform linux/amd64 --load --tag straightlens:amd64 .
+```
+
+任务目录保存在名为 `straightlens-jobs` 的 Docker volume 中，因此容器重启或重新创建后，已完成任务仍可读取。查看服务状态和日志：
+
+```bash
+docker compose ps
+docker compose logs -f straightlens
+```
+
+停止服务但保留任务数据：
+
+```bash
+docker compose down
+```
+
+如果确认要同时删除任务数据，再执行：
+
+```bash
+docker compose down -v
+```
+
+镜像内包含 IPOL 算法实现，使用和发布时仍须遵守项目及上游的 CC BY-NC-SA 3.0 许可和署名要求。
+
 Python 锁文件记录了本次验证环境。若在不同 Python 版本上无法解析锁定版本，可用 `uv pip install --python .venv-local/bin/python './backend[test]'` 安装声明的兼容依赖后重新运行测试。
 
 ## 验证
