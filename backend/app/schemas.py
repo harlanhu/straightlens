@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Any, Literal
 from pydantic import BaseModel
 
 class JobAccepted(BaseModel):
@@ -34,3 +34,4 @@ class JobView(BaseModel):
     transform_version: int | None = None
     upload_preview_url: str | None = None
     upload_image_url: str | None = None
+    distortion: dict[str, Any] | None = None
