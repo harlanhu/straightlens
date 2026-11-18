@@ -33,9 +33,11 @@ def _profile(directory: Path, spec) -> dict[str, Any]:
     elif min(signs) < -0.002 and max(signs) > 0.002:
         profile, profile_label = 'mustache', '胡须形畸变'
     elif median > 0:
-        profile, profile_label = 'barrel', '桶形畸变'
-    else:
+        # A positive correction delta means the correction pulls edge points inward;
+        # the source image therefore exhibits pincushion distortion.
         profile, profile_label = 'pincushion', '枕形畸变'
+    else:
+        profile, profile_label = 'barrel', '桶形畸变'
     strength_value = edge_max * 100
     if strength_value < 1:
         strength, strength_label = 'light', '轻微'
