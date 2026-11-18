@@ -6,6 +6,7 @@ from fastapi import FastAPI,File,UploadFile,Request
 from typing import Literal
 from .engine.reverse import ReverseError
 from .reverse_api import router as reverse_router,describe_correction,materialize_correction_assets
+from .distortion_report import describe_distortion
 from fastapi.responses import FileResponse,JSONResponse
 from fastapi.staticfiles import StaticFiles
 from .jobs import JobManager,BusyError,JOB_ID
@@ -71,6 +72,7 @@ def create_app(data_root: Path|None=None, processor=None) -> FastAPI:
             return JSONResponse({'detail':'任务已过期' if status==410 else '任务不存在'},status_code=status)
         view={key:record.get(key) for key in JobView.model_fields if key in record}
         view.update(describe_correction(request.app.state.manager.root/identifier,record))
+        view['distortion']=describe_distortion(request.app.state.manager.root/identifier,record)
         if record['status']=='succeeded':
             view['original_preview_url']=f'/api/jobs/{identifier}/preview/original'
             view['result_preview_url']=f'/api/jobs/{identifier}/preview/result'

@@ -1,3 +1,11 @@
+export type DistortionReport = {
+  available:boolean; profile?:'barrel'|'pincushion'|'mustache'|'neutral'; profile_label?:string;
+  strength?:string; strength_label?:string; edge_correction_percent?:number;
+  center?:{x:number;y:number;x_percent:number;y_percent:number;offset_x:number;offset_y:number};
+  model?:{type:string;label:string;coefficients:number[];estimation_size:{width:number;height:number};render_scale:number;version:number};
+  crop?:{left:number;top:number;right:number;bottom:number;retained_area:number};
+  reason_code?:string;reason_label?:string;exif?:Record<string,unknown>|null;
+};
 export type Job = {
   id:string;status:'queued'|'running'|'succeeded'|'failed';stage:string;stages:string[];
   outcome?:'corrected'|'unchanged'|'failed'|'reversed';reason_code?:string;message:string;
@@ -7,6 +15,7 @@ export type Job = {
   kind?:'correction'|'reverse';parent_id?:string|null;reference_basis?:'cropped'|'uncropped'|null;
   uncropped_download_url?:string|null;uncropped_width?:number|null;uncropped_height?:number|null;
   can_reverse?:boolean;transform_version?:number|null;covered_fraction?:number|null;upload_preview_url?:string|null;upload_image_url?:string|null;
+  distortion?:DistortionReport;
 };
 export type Basis='auto'|'cropped'|'uncropped';
 export class ApiError extends Error{
