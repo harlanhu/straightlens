@@ -10,9 +10,9 @@ export default function DistortionGrid({report}:{report:DistortionReport}) {
   return <div className="distortion-grid" aria-label="镜头畸变网格示意图">
     <div className="grid-visual" role="img" aria-label={`${report.profile_label||'估计畸变'}的网格示意`}>
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        {lines.map(value=><path key={`v-${value}`} d={vertical(value)} />)}
-        {lines.map(value=><path key={`h-${value}`} d={horizontal(value)} />)}
-        <circle cx={report.center.x_percent} cy={report.center.y_percent} r="2.2" />
+        {lines.map(value=><path key={`v-${value}`} d={vertical(value)} stroke="#5d6a45" strokeWidth=".35" opacity=".75" fill="none" />)}
+        {lines.map(value=><path key={`h-${value}`} d={horizontal(value)} stroke="#5d6a45" strokeWidth=".35" opacity=".75" fill="none" />)}
+        <circle cx={report.center.x_percent} cy={report.center.y_percent} r="2.2" fill="#c6f24e" stroke="#111" strokeWidth="1" />
       </svg>
     </div>
     <p>网格中心表示估计的畸变中心，曲线方向表示校正趋势。</p>
